@@ -58,32 +58,83 @@ int main(){
     addr_size = sizeof serverStorage;
     newSocket = accept(welcomeSocket, (struct sockaddr *) &serverStorage, &addr_size);
 
-    // Some code to parse the input
-    int count[4] = {0, 0, 0, 0};
-    // dogs, cats, cars, trucks
+    while (1) {
+        int valread = read(newSocket, buffer, 1024);
+        int n = strlen(buffer);
 
-    for (int i = 0; i < n; i++) {
-        if (input[i] == ' ' || input[i] == '\t') {
-            continue;
-        }
-        assert(input[i] >= '0' && input[i] <= '9');
-        int j = i;
-        while (j < n && input[j] >= '0' && input[j] <= '9') {
-            j++;
-        }
-        int cnt = parse_int(input, i, j);
-        while (j < n && (input[j] == ' ' || input[j] < '\t')) {
-            j++;
-        }
-        int ind = get_ind(input, &j, n);
-        count[ind] = cnt;
+        int count[4] = {0, 0, 0, 0};
+        // dogs, cats, cars, trucks
 
-        i = j - 1;
+        for (int i = 0; i < n; i++) {
+            if (buffer[i] == ' ' || buffer[i] == '\t') {
+                continue;
+            }
+            int j = i;
+            while (j < n && buffer[j] >= '0' && buffer[j] <= '9') {
+                j++;
+            }
+            int cnt = parse_int(buffer, i, j);
+            while (j < n && (buffer[j] == ' ' || buffer[j] < '\t')) {
+                j++;
+            }
+            int ind = get_ind(buffer, &j, n);
+            count[ind] = cnt;
+
+            i = j - 1;
+        }
+
+        char files[1024];
+        files[0] = 'i';
+        files[1] = 'm';
+        files[2] = 'a';
+        files[3] = 'g';
+        files[4] = 'e';
+        files[5] = 's';
+        files[6] = '/';
+        for (int i = 0; i < 4; i++) {
+            int offset;
+            if (i == 0) {
+                files[7] = 'd'; files[8] = 'o'; files[9] = 'g';
+                offset = 10;
+            } else if (i == 1) {
+                files[7] = 'c'; files[8] = 'a'; files[9] = 't';
+                offset = 10;
+            } else if (i == 2) {
+                files[7] = 'c'; files[8] = 'a'; files[9] = 'r';
+                offset = 10;
+            } else {
+                files[7] = 't'; files[8] = 'r'; files[9] = 'u';
+                files[10] = 'c'; files[11] = 'k';
+                offset = 12;
+            }
+            files[offset++] = '/';
+            for (int j = 0; j < count[i]; j++) {
+                files[offset++] = '1' + j;
+                files[offset++] = '.';
+                files[offset++] =  'j';
+                files[offset++] =  'p';
+                files[offset++] =  'q';
+                files[offset++] = '\0';
+
+                FILE* fp = fopen(files, "rb");
+                if (fp == NULL) {
+                    continue;
+                }
+
+                while (1) {
+                    unsigned char buffer[4096] = {0};
+                    int nread = fread(buffer, 1, 4096, fp);
+                    if (nread > 0) {
+                        send(newSocket, buffer, nread, 0);
+                    }
+
+                    if (nread < 1024) {
+                        break;
+                    }
+                }
+            }
+        }
     }
-    // End code
-
-    strcpy(buffer,"Hello World\n");
-    send(newSocket,buffer,13,0);
 
     return 0;
 }
