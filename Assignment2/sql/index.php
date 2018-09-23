@@ -1,7 +1,7 @@
 <?php
-$servername = "localhost";
+$servername = "172.17.0.3";
 $username = "root";
-$password = "";
+$password = "cs252-a2-mysql";
 $dbname = "employees";
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
@@ -81,7 +81,7 @@ if ($sql != "") {
     }
 }
 ?>
-<? } else {?>
+<?php } else { ?>
         <form action="<?php echo $_SERVER['SCRIPT_FILENAME'];?>" method="post">
             <input type="hidden" name="_query" id="_query" value="1" />
             <label for="query1">Query 1 - Filter Employees by the following fields.</label>
@@ -144,3 +144,4 @@ $conn->close();
 ?>
     </body>
 </html>
+
