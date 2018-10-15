@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      Location Aware Google Maps
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="resetCoords()">
+        <ion-icon name="ios-locate-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+<div #coords id="coords">
+  <label>
+    Latitude: <input [(ngModel)]="lat" placeholder="" (input)="changeCoord(lat,lng)">
+  </label>
+  &nbsp;&nbsp;&nbsp;
+  <label>
+    Longitude: <input [(ngModel)]="lng" placeholder="" (input)="changeCoord(lat,lng)">
+  </label>
+  <br>
+  <br>
+  Latitutde: {{lat}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Longitude: {{lng}}
+</div>
+<ion-content>
+
+<ion-content>
+  <div #map id="map"></div>
+</ion-content>
